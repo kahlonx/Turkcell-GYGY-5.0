@@ -22,7 +22,7 @@ public class Account implements Transaction {
         }
     }
 
-    public void witdraw(double amount) {
+    public void withdraw(double amount) {
         if (balance >= amount && amount > 0) {
             balance -= amount;
             System.out.println(owner + " hesabından" + amount + " TL çekildi.");
