@@ -15,6 +15,11 @@ public class Main {
         standartHesap.transfer(salaryHesap, 100.0);
         standartHesap.showBalance();
         salaryHesap.showBalance();
+
+        System.out.println("\nSenaryo 2: Maaş hesabı para transferi yapıyor ( İşlem ücreti yok.).");
+        salaryHesap.transfer(standartHesap, 150.0);
+        standartHesap.showBalance();
+        salaryHesap.showBalance();
       
     }
 }
