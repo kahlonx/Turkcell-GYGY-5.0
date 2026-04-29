@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.spring_starter.dto.*;
 import com.turkcell.spring_starter.entity.Tag;
+import com.turkcell.spring_starter.exception.TagNotFoundException;
 import com.turkcell.spring_starter.repository.TagRepository;
 
 @Service
@@ -44,7 +45,7 @@ public class TagServiceImpl {
 
     public GetTagResponse getById(UUID id) {
         Tag tag = tagRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tag not found!"));
+                .orElseThrow(() -> new TagNotFoundException("Tag not found!"));
         
         GetTagResponse response = new GetTagResponse();
         response.setId(tag.getId());
@@ -54,7 +55,7 @@ public class TagServiceImpl {
 
     public UpdatedTagResponse update(UUID id, UpdateTagRequest request) {
         Tag tag = tagRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tag not found!"));
+                .orElseThrow(() -> new TagNotFoundException("Tag not found!"));
         
         tag.setName(request.getName());
         tag = tagRepository.save(tag);

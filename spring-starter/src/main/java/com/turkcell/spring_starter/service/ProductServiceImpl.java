@@ -12,6 +12,8 @@ import com.turkcell.spring_starter.dto.*;
 import com.turkcell.spring_starter.entity.Category;
 import com.turkcell.spring_starter.entity.Product;
 import com.turkcell.spring_starter.entity.Tag;
+import com.turkcell.spring_starter.exception.CategoryNotFoundException;
+import com.turkcell.spring_starter.exception.ProductNotFoundException;
 import com.turkcell.spring_starter.repository.CategoryRepository;
 import com.turkcell.spring_starter.repository.ProductRepository;
 import com.turkcell.spring_starter.repository.TagRepository;
@@ -32,7 +34,7 @@ public class ProductServiceImpl {
 
     public CreatedProductResponse create(CreateProductRequest request) {
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found!"));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found!"));
 
         List<Tag> foundTags = tagRepository.findAllById(request.getTagIds());
         Set<Tag> tags = new HashSet<>(foundTags);
@@ -86,7 +88,7 @@ public class ProductServiceImpl {
 
     public GetProductResponse getById(UUID id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found!"));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
         
         GetProductResponse response = new GetProductResponse();
         response.setId(product.getId());
@@ -106,10 +108,10 @@ public class ProductServiceImpl {
 
     public UpdatedProductResponse update(UUID id, UpdateProductRequest request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found!"));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
         
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found!"));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found!"));
 
         List<Tag> foundTags = tagRepository.findAllById(request.getTagIds());
         Set<Tag> tags = new HashSet<>(foundTags);

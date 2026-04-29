@@ -15,6 +15,7 @@ import com.turkcell.spring_starter.dto.UpdateCategoryRequest;
 import com.turkcell.spring_starter.dto.UpdatedCategoryResponse;
 
 import com.turkcell.spring_starter.entity.Category;
+import com.turkcell.spring_starter.exception.CategoryNotFoundException;
 import com.turkcell.spring_starter.repository.CategoryRepository;
 
 @Service
@@ -59,7 +60,7 @@ public class CategoryServiceImpl {
     public GetCategoryResponse getById(UUID id) {
         // Find the category or throw an exception if it doesn't exist
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
         
         GetCategoryResponse response = new GetCategoryResponse();
         response.setId(category.getId());
@@ -71,7 +72,7 @@ public class CategoryServiceImpl {
     public UpdatedCategoryResponse update(UUID id, UpdateCategoryRequest request) {
         // First, verify the category exists
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
         
         // Update the fields
         category.setName(request.getName());
