@@ -8,6 +8,7 @@ import com.turkcell.library.entity.Book;
 import com.turkcell.library.repository.BookRepository;
 import com.turkcell.library.entity.Category;
 import com.turkcell.library.repository.CategoryRepository;
+import com.turkcell.library.exception.type.NotFoundException;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -21,7 +22,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public CreatedBookResponse create(CreateBookRequest request) {
-        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category not found"));
         Book entity = new Book();
         entity.setTitle(request.getTitle());
         entity.setPublicationDate(request.getPublicationDate());
@@ -48,7 +50,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public GetBookResponse getById(Integer id) {
-        Book entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Book entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Book not found"));
         GetBookResponse response = new GetBookResponse();
         response.setId(entity.getId());
         return response;
@@ -56,9 +58,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public UpdatedBookResponse update(Integer id, UpdateBookRequest request) {
-        Book entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Book entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Book not found"));
         if (request.getCategoryId() != null) {
-            Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new NotFoundException("Category not found"));
             entity.setCategory(category);
         }
         if (request.getTitle() != null) {

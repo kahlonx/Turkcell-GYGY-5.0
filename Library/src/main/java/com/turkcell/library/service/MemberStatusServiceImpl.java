@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.turkcell.library.dto.*;
 import com.turkcell.library.entity.MemberStatus;
 import com.turkcell.library.repository.MemberStatusRepository;
+import com.turkcell.library.exception.type.NotFoundException;
 
 @Service
 public class MemberStatusServiceImpl implements MemberStatusService {
@@ -39,7 +40,7 @@ public class MemberStatusServiceImpl implements MemberStatusService {
 
     @Override
     public GetMemberStatusResponse getById(Integer id) {
-        MemberStatus entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        MemberStatus entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Member status not found"));
         GetMemberStatusResponse response = new GetMemberStatusResponse();
         response.setId(entity.getId());
         return response;
@@ -47,7 +48,7 @@ public class MemberStatusServiceImpl implements MemberStatusService {
 
     @Override
     public UpdatedMemberStatusResponse update(Integer id, UpdateMemberStatusRequest request) {
-        MemberStatus entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        MemberStatus entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Member status not found"));
         if (request.getStatusValue() != null) {
             entity.setStatusValue(request.getStatusValue());
         }

@@ -12,6 +12,7 @@ import com.turkcell.library.entity.Loan;
 import com.turkcell.library.repository.LoanRepository;
 import com.turkcell.library.entity.Librarian;
 import com.turkcell.library.repository.LibrarianRepository;
+import com.turkcell.library.exception.type.NotFoundException;
 
 @Service
 public class FineServiceImpl implements FineService {
@@ -29,9 +30,13 @@ public class FineServiceImpl implements FineService {
 
     @Override
     public CreatedFineResponse create(CreateFineRequest request) {
-        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> new RuntimeException("Member not found"));
-        Loan loan = loanRepository.findById(request.getLoanId()).orElseThrow(() -> new RuntimeException("Loan not found"));
-        Librarian librarian = librarianRepository.findById(request.getLibrarianId()).orElseThrow(() -> new RuntimeException("Librarian not found"));
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new NotFoundException("Member not found"));
+        Loan loan = loanRepository.findById(request.getLoanId())
+                .orElseThrow(() -> new NotFoundException("Loan not found"));
+        Librarian librarian = librarianRepository.findById(request.getLibrarianId())
+                .orElseThrow(() -> new NotFoundException("Librarian not found"));
+        
         Fine entity = new Fine();
         entity.setFineDate(request.getFineDate());
         entity.setFineAmount(request.getFineAmount());
@@ -58,7 +63,7 @@ public class FineServiceImpl implements FineService {
 
     @Override
     public GetFineResponse getById(Integer id) {
-        Fine entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Fine entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Fine not found"));
         GetFineResponse response = new GetFineResponse();
         response.setId(entity.getId());
         return response;
@@ -66,7 +71,7 @@ public class FineServiceImpl implements FineService {
 
     @Override
     public UpdatedFineResponse update(Integer id, UpdateFineRequest request) {
-        Fine entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Fine entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Fine not found"));
         if (request.getFineAmount() != null) {
             entity.setFineAmount(request.getFineAmount());
         }

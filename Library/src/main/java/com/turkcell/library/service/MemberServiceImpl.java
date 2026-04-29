@@ -8,6 +8,7 @@ import com.turkcell.library.entity.Member;
 import com.turkcell.library.repository.MemberRepository;
 import com.turkcell.library.entity.MemberStatus;
 import com.turkcell.library.repository.MemberStatusRepository;
+import com.turkcell.library.exception.type.NotFoundException;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -21,7 +22,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public CreatedMemberResponse create(CreateMemberRequest request) {
-        MemberStatus memberstatus = memberstatusRepository.findById(request.getStatusId()).orElseThrow(() -> new RuntimeException("MemberStatus not found"));
+        MemberStatus memberstatus = memberstatusRepository.findById(request.getStatusId())
+                .orElseThrow(() -> new NotFoundException("MemberStatus not found"));
         Member entity = new Member();
         entity.setFirstName(request.getFirstName());
         entity.setLastName(request.getLastName());
@@ -47,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public GetMemberResponse getById(Integer id) {
-        Member entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Member entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Member not found"));
         GetMemberResponse response = new GetMemberResponse();
         response.setId(entity.getId());
         return response;
@@ -55,9 +57,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public UpdatedMemberResponse update(Integer id, UpdateMemberRequest request) {
-        Member entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Member entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Member not found"));
         if (request.getStatusId() != null) {
-            MemberStatus memberstatus = memberstatusRepository.findById(request.getStatusId()).orElseThrow(() -> new RuntimeException("MemberStatus not found"));
+            MemberStatus memberstatus = memberstatusRepository.findById(request.getStatusId())
+                    .orElseThrow(() -> new NotFoundException("MemberStatus not found"));
             entity.setStatus(memberstatus);
         }
         if (request.getFirstName() != null) {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.turkcell.library.dto.*;
 import com.turkcell.library.entity.Author;
 import com.turkcell.library.repository.AuthorRepository;
+import com.turkcell.library.exception.type.NotFoundException;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
@@ -40,7 +41,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public GetAuthorResponse getById(Integer id) {
-        Author entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Author entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Author not found"));
         GetAuthorResponse response = new GetAuthorResponse();
         response.setId(entity.getId());
         return response;
@@ -48,7 +49,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public UpdatedAuthorResponse update(Integer id, UpdateAuthorRequest request) {
-        Author entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Author entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Author not found"));
         if (request.getFirstName() != null) {
             entity.setFirstName(request.getFirstName());
         }

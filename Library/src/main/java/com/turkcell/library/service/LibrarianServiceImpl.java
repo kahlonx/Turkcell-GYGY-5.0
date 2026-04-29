@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.turkcell.library.dto.*;
 import com.turkcell.library.entity.Librarian;
 import com.turkcell.library.repository.LibrarianRepository;
+import com.turkcell.library.exception.type.NotFoundException;
 
 @Service
 public class LibrarianServiceImpl implements LibrarianService {
@@ -40,7 +41,7 @@ public class LibrarianServiceImpl implements LibrarianService {
 
     @Override
     public GetLibrarianResponse getById(Integer id) {
-        Librarian entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Librarian entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Librarian not found"));
         GetLibrarianResponse response = new GetLibrarianResponse();
         response.setId(entity.getId());
         return response;
@@ -48,7 +49,7 @@ public class LibrarianServiceImpl implements LibrarianService {
 
     @Override
     public UpdatedLibrarianResponse update(Integer id, UpdateLibrarianRequest request) {
-        Librarian entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Librarian entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Librarian not found"));
         if (request.getFirstName() != null) {
             entity.setFirstName(request.getFirstName());
         }

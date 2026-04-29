@@ -8,6 +8,7 @@ import com.turkcell.library.entity.FinePayment;
 import com.turkcell.library.repository.FinePaymentRepository;
 import com.turkcell.library.entity.Member;
 import com.turkcell.library.repository.MemberRepository;
+import com.turkcell.library.exception.type.NotFoundException;
 
 @Service
 public class FinePaymentServiceImpl implements FinePaymentService {
@@ -21,7 +22,8 @@ public class FinePaymentServiceImpl implements FinePaymentService {
 
     @Override
     public CreatedFinePaymentResponse create(CreateFinePaymentRequest request) {
-        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> new RuntimeException("Member not found"));
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new NotFoundException("Member not found"));
         FinePayment entity = new FinePayment();
         entity.setPaymentAmount(request.getPaymentAmount());
         entity.setMember(member);
@@ -45,7 +47,7 @@ public class FinePaymentServiceImpl implements FinePaymentService {
 
     @Override
     public GetFinePaymentResponse getById(Integer id) {
-        FinePayment entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        FinePayment entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Fine payment not found"));
         GetFinePaymentResponse response = new GetFinePaymentResponse();
         response.setId(entity.getId());
         return response;
@@ -53,7 +55,7 @@ public class FinePaymentServiceImpl implements FinePaymentService {
 
     @Override
     public UpdatedFinePaymentResponse update(Integer id, UpdateFinePaymentRequest request) {
-        FinePayment entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        FinePayment entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Fine payment not found"));
         if (request.getPaymentAmount() != null) {
             entity.setPaymentAmount(request.getPaymentAmount());
         }

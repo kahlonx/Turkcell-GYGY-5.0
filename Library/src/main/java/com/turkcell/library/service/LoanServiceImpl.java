@@ -12,6 +12,7 @@ import com.turkcell.library.entity.Member;
 import com.turkcell.library.repository.MemberRepository;
 import com.turkcell.library.entity.Librarian;
 import com.turkcell.library.repository.LibrarianRepository;
+import com.turkcell.library.exception.type.NotFoundException;
 
 @Service
 public class LoanServiceImpl implements LoanService {
@@ -29,9 +30,13 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public CreatedLoanResponse create(CreateLoanRequest request) {
-        Book book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new RuntimeException("Book not found"));
-        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> new RuntimeException("Member not found"));
-        Librarian librarian = librarianRepository.findById(request.getLibrarianId()).orElseThrow(() -> new RuntimeException("Librarian not found"));
+        Book book = bookRepository.findById(request.getBookId())
+                .orElseThrow(() -> new NotFoundException("Book not found"));
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new NotFoundException("Member not found"));
+        Librarian librarian = librarianRepository.findById(request.getLibrarianId())
+                .orElseThrow(() -> new NotFoundException("Librarian not found"));
+        
         Loan entity = new Loan();
         entity.setLoanDate(request.getLoanDate());
         entity.setBook(book);
@@ -57,7 +62,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public GetLoanResponse getById(Integer id) {
-        Loan entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Loan entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Loan not found"));
         GetLoanResponse response = new GetLoanResponse();
         response.setId(entity.getId());
         return response;
@@ -65,7 +70,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public UpdatedLoanResponse update(Integer id, UpdateLoanRequest request) {
-        Loan entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Loan entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Loan not found"));
         if (request.getReturnDate() != null) {
             entity.setReturnDate(request.getReturnDate());
         }

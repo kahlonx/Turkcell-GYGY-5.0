@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.turkcell.library.dto.*;
 import com.turkcell.library.entity.Category;
 import com.turkcell.library.repository.CategoryRepository;
+import com.turkcell.library.exception.type.NotFoundException;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -39,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public GetCategoryResponse getById(Integer id) {
-        Category entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Category entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
         GetCategoryResponse response = new GetCategoryResponse();
         response.setId(entity.getId());
         return response;
@@ -47,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public UpdatedCategoryResponse update(Integer id, UpdateCategoryRequest request) {
-        Category entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        Category entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
         if (request.getCategoryName() != null) {
             entity.setCategoryName(request.getCategoryName());
         }
