@@ -1,0 +1,16 @@
+spring:
+    application:
+        name: library
+    datasource:
+        url: jdbc:postgresql://localhost:5432/library
+        username: admin
+        password: admin
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+
+jwt:
+    secret: bGlicmFyeS1qd3Qtc2VjcmV0LWtleS10dXJrY2VsbC1saWJyYXJ5LWFwcGxpY2F0aW9u
+    expiration: 86400000
